@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sorting Colors</title>
+    <script src="p5.min.js"></script>
+    <style>
+        html{
+            height: 100%;
+        }
+        body{
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        canvas{
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        let squares = [];
+        const size = 50;
+
+        function setup(){
+            createCanvas(500, 500);
+            for(let i = 0; i < 500; i += size){
+                for(let j = 0; j <= 500; j += size){
+                    squares.push(new Square(j, i));
+                }
+            }
+            n = squares.length;
+        }
+
+        class Square{
+            constructor(x, y){
+                this._x = x;
+                this._y = y;
+                this._color = random(255);
+            }
+
+            get x(){
+                return this._x;
+            }
+            get y(){
+                return this._y;
+            }
+            get color(){
+                return this._color;
+            }
+
+            set x(x){
+                this._x = x;
+            }
+            set y(y){
+                this._y = y;
+            }
+
+            draw(){
+                push();
+                fill(this.color, 100, 100);
+                square(this.x, this.y, size);
+                pop();
+            }
+            fix(x, y){
+                this.x = x;
+                this.y = y;
+            }
+        }
+
+        let n = 0;
+        let i = 0;
+        let j = 0;
+        let swap = true;
+
+        function draw(){
+            background(255);
+            noStroke();
+            colorMode(HSB);
+            squares.forEach(s=>s.draw());
+
+            if(swap){
+                let swapped = false;
+                if(j < n-i-1){
+                    if(squares[j].color > squares[j+1].color){
+                        [squares[j], squares[j+1]] = [squares[j+1], squares[j]];
+                        let posX = squares[j+1].x;
+                        let posY = squares[j+1].y;
+                        squares[j+1].fix(squares[j].x, squares[j].y);
+                        squares[j].fix(posX, posY);
+                        swapped = true;
+                    }
+                    j++;
+                } else {
+                    j = 0;
+                    i++;
+                }
+                if(i > n && n > 0) swap = false;
+            } else {
+                noLoop();
+            }
+        }
+    </script>
+</body>
+</html>
